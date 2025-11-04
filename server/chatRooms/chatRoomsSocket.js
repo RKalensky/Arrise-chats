@@ -9,6 +9,10 @@ const initListeners = (wsServer, ws) => {
             const { roomId, userId, userName, message } = data;
             const room = ChatRoomsManager.getChatRoom(roomId);
 
+            if (!roomId || !userId || !userName || !message) {
+                return ws.send(JSON.stringify({ error: 'Bad message structure. Fields roomId, userId, userName, message are required' }));
+            }
+
             // TODO: check emojis
             if (message.length > MESSAGE_MAX_LENGTH) {
                 return ws.send(JSON.stringify({ error: `Message length is exceeded ${MESSAGE_MAX_LENGTH} characters` }));
