@@ -5,12 +5,15 @@
   "description": "chat room based on websockets",
   "scripts": {
     "start": "node ./index.js",
-    "start:debug": "node --inspect-brk index.js"
+    "dev": "nodemon ./index.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
