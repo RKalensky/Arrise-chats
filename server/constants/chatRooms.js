@@ -1,0 +1,2 @@
+export const INITIAL_CHAT_ROOMS_COUNT = 3;
+export const MAX_LATEST_MESSAGES_COUNT = 10;
