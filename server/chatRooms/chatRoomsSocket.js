@@ -21,7 +21,7 @@ const initListeners = (wsServer, ws) => {
             room.addMessage({ userId, userName, message });
             notifyAll(wsServer, data);
         } catch (error) {
-            ws.send(JSON.stringify(error));
+            ws.send(JSON.stringify({ error: error.message }))
         }
     });
 }
