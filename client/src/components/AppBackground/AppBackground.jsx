@@ -2,10 +2,16 @@ import { EventType, Fit, Layout, useRive, useStateMachineInput } from '@rive-app
 import natureRiv from '../../assets/nature.riv';
 import { useEffect } from 'react';
 import { appBackground } from './AppBackground.module.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { getTheme } from '../../store/selectors/ui';
+import { setTheme } from '../../store/actions/ui';
 
 const STATE_MACHINE_NAME = 'Start';
 
 export default function AppBackground() {
+    const dispatch = useDispatch();
+    const theme = useSelector(getTheme);
+
     const { rive, RiveComponent } = useRive({
         src: natureRiv,
         stateMachines: STATE_MACHINE_NAME,
@@ -16,15 +22,13 @@ export default function AppBackground() {
         automaticallyHandleEvents: true
     });
 
-    // TODO: Check memo
     const riveInput = useStateMachineInput(rive, STATE_MACHINE_NAME, 'on/off');
 
     useEffect(() => {
         if (riveInput) {
-            riveInput.value = true;
-            // subscribe to store updates
+            riveInput.value = theme === 'dark';
         }
-    }, [riveInput]);
+    }, [theme]);
 
     useEffect(() => {
         if (!rive) return;
@@ -33,7 +37,8 @@ export default function AppBackground() {
             if (!riveInput) {
                 return;
             }
-            console.log('State machine updated:', riveInput.value);
+
+            dispatch(setTheme(riveInput.value ? 'dark' : 'light'));
         };
 
         rive.on(EventType.StateChange, handleStateChange);
