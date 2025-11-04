@@ -8,6 +8,7 @@ module.exports = {
     devServer: {
         static: './public',
         port: 3000,
+        open: true,
         hot: true
     },
     output: {
@@ -22,12 +23,28 @@ module.exports = {
                 use: 'babel-loader'
             },
             {
-                test: /\.s[ac]ss$/i,
+                test: /\.module\.scss$/,
                 use: [
                     'style-loader',
-                    'css-loader',
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            modules: {
+                                localIdentName: '[name]__[local]__[hash:base64:5]'
+                            },
+                        },
+                    },
                     'sass-loader'
-                ],
+                ]
+            },
+            {
+                test: /\.scss$/i,
+                exclude: /\.module\.scss$/,
+                use: ['style-loader', 'css-loader', 'sass-loader'],
+            },
+            {
+                test: /\.(png|jpe?g|gif|svg)$/i,
+                type: 'asset/resource'
             }
         ]
     },
