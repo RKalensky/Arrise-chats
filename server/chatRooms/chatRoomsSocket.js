@@ -1,5 +1,6 @@
 import ChatRoomsManager from './chatRoomsManager.js';
 import { WebSocketServer } from 'ws';
+import { MESSAGE_MAX_LENGTH } from '../constants/chatRooms.js';
 
 const initListeners = (wsServer, ws) => {
     ws.on('message', (rawData) => {
@@ -7,6 +8,11 @@ const initListeners = (wsServer, ws) => {
             const data = JSON.parse(rawData);
             const { roomId, userId, userName, message } = data;
             const room = ChatRoomsManager.getChatRoom(roomId);
+
+            // TODO: check emojis
+            if (message.length > MESSAGE_MAX_LENGTH) {
+                return ws.send(JSON.stringify({ error: `Message length is exceeded ${MESSAGE_MAX_LENGTH} characters` }));
+            }
 
             if (!room) {
                 return ws.send(JSON.stringify({ error: 'Room not found' }));
