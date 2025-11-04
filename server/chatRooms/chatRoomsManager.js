@@ -10,8 +10,7 @@ export default class ChatRoomsManager {
     }
 
     static getAllChatRooms() {
-        /* Return only { id, name } fields */
-        return [...this.chatRooms.values()].map(({ messages, ...rest }) => rest);
+        return [...this.chatRooms.values()].map(({ id, name }) => ({ id, name }));
     }
 
     static getChatRoom(id) {
