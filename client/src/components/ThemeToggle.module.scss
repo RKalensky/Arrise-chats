@@ -1,0 +1,41 @@
+$toggleWidth: 62px;
+$toggleHeight: 30px;
+$horizontalPadding: 3px;
+
+.toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: $toggleWidth;
+  height: $toggleHeight;
+  padding: 0 $horizontalPadding;
+  border-radius: calc(#{$toggleWidth} / 2);
+  transition: opacity 3s linear;
+  cursor: pointer;
+  user-select: none;
+
+  &.light {
+    justify-content: flex-end;
+    padding-right: 6px;
+    background: linear-gradient(135deg, rgb(15, 113, 215) 0%, rgba(237, 221, 83, 1) 100%);
+  }
+
+  &.dark {
+    padding-left: 6px;
+    background: linear-gradient(135deg, rgba(51, 115, 184, 1) 0%, rgba(149, 25, 166, 1) 100%);
+  }
+}
+
+.circle {
+  position: absolute;
+  left: $horizontalPadding;
+  width: calc(#{$toggleHeight} - $horizontalPadding * 2);
+  height: calc(#{$toggleHeight} - $horizontalPadding * 2);
+  border-radius: 50%;
+  background: white;
+  transition: transform 0.1s linear;
+
+  &.circleEndPosition {
+    transform: translateX(calc(#{$toggleWidth} - #{$toggleHeight}));
+  }
+}
