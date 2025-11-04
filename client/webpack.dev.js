@@ -45,6 +45,17 @@ module.exports = {
             {
                 test: /\.(png|jpe?g|gif|svg)$/i,
                 type: 'asset/resource'
+            },
+            {
+                test: /\.(mp4|webm|mp3|wav|riv)$/i,
+                type: 'asset/resource',
+                generator: { filename: 'media/[hash][ext][query]' }
+            },
+            {
+                test: /\.(png|jpe?g|gif|svg)$/i,
+                type: 'asset',
+                parser: { dataUrlCondition: { maxSize: 10 * 1024 } },
+                generator: { filename: 'images/[hash][ext][query]' }
             }
         ]
     },

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import Moon from '../assets/moon';
-import Sun from '../assets/sun';
+import Moon from '../../assets/moon';
+import Sun from '../../assets/sun';
 import * as styles from './ThemeToggle.module.scss';
 import classNames from 'classnames';
 

@@ -1,7 +1,9 @@
+import AppBackground from './components/AppBackground/AppBackground';
+
 export default function App() {
     return (
-        <h1>
-            Hello app!
-        </h1>
+        <>
+            <AppBackground/>
+        </>
     );
 }
