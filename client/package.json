@@ -7,11 +7,13 @@
     "build": "webpack --config webpack.prod.js"
   },
   "dependencies": {
+    "classnames": "^2.5.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-redux": "^9.1.0",
     "redux": "^5.0.1",
-    "redux-saga": "^1.4.2"
+    "redux-saga": "^1.4.2",
+    "react-spring": "^10.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
