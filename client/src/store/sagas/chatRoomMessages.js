@@ -27,21 +27,14 @@ function createWebSocketConnection() {
 }
 
 function createWebsocketChannel(socket) {
-  console.log('socket', socket);
-
   return eventChannel((emit) => {
-    socket.onopen = () => {
-      console.log('opening...');
-    };
+    socket.onopen = () => {};
     socket.onerror = (error) => {
       console.log('WebSocket error ' + error);
-      emit();
-      // EMIT here
     };
     socket.onmessage = (event) => {
       try {
         const payload = JSON.parse(event.data);
-        console.log('payload', payload);
         return emit({ type: 'ADD_MESSAGE', payload });
       } catch (error) {
         console.error('WebSocket message error', error);
@@ -49,7 +42,6 @@ function createWebsocketChannel(socket) {
     };
 
     return () => {
-      console.log('WebSocket disconnected');
       socket.close();
     };
   });
@@ -62,7 +54,7 @@ function* wsSubscribeWorker(channel) {
 
       switch (action.type) {
         case ADD_MESSAGE: {
-          yield put(addChatRoomMessage(action.payload));
+          yield put(addChatRoomMessage({ ...action.payload, isFromSocket: true }));
         }
       }
     }

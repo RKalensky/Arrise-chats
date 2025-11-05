@@ -26,10 +26,14 @@ export default function ChatRoom() {
     <p>No messages yet</p>
   ) : (
     <ul className={styles.messages} ref={list}>
-      {messages.map(({ userName, message }, index) => {
+      {messages.map(({ userName, message, isFromSocket }, index) => {
         return (
           <li key={index} className={styles.message}>
-            <ChatMessage message={message} userName={userName}></ChatMessage>
+            <ChatMessage
+              message={message}
+              userName={userName}
+              isFromSocket={isFromSocket}
+            ></ChatMessage>
           </li>
         );
       })}

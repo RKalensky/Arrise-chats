@@ -9,10 +9,13 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@react-spring/web": "^10.0.3",
     "@rive-app/react-canvas": "^4.23.4",
     "classnames": "^2.5.1",
+    "emoji-regex": "^10.6.0",
     "immer": "^10.2.0",
     "react": "^19.2.0",
+    "react-confetti-boom": "^2.0.1",
     "react-dom": "^19.2.0",
     "react-redux": "^9.1.0",
     "react-spinners": "^0.17.0",
