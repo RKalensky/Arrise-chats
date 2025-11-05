@@ -14,7 +14,7 @@ export default function ChatPanel() {
   const [nickNameError, setNickNameError] = useState('');
   const [messageError, setMessageError] = useState('');
 
-  const { id: roomId } = useSelector(getSelectedChatRoom);
+  const room = useSelector(getSelectedChatRoom);
   const dispatch = useDispatch();
 
   const setNickNameHandler = (name) => {
@@ -38,8 +38,8 @@ export default function ChatPanel() {
     setNickNameError(nickNameErrorValidationResult);
     setMessageError(messageErrorValidationResult);
 
-    if (!nickNameErrorValidationResult && !messageErrorValidationResult) {
-      dispatch(sendChatRoomMessage({ userName: nickName, message, roomId }));
+    if (!nickNameErrorValidationResult && !messageErrorValidationResult && room) {
+      dispatch(sendChatRoomMessage({ userName: nickName, message, roomId: room.id }));
       setMessage('');
     }
   };
