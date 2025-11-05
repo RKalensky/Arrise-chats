@@ -3,14 +3,15 @@
   max-width: 80%;
   width: max-content;
   padding: 8px 16px;
-  border: 1px solid #8d8d8d;
-  background-color: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--gray-color);
+  background-color: var(--bacground-color);
   font-size: 14px;
 }
 
 .userName {
   margin-bottom: 8px;
   font-size: inherit;
+  color: var(--header-color);
 }
 
 .message {
