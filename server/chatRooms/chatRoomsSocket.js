@@ -22,7 +22,6 @@ const initListeners = (wsServer, ws) => {
                 return;
             }
 
-            // TODO: check emojis
             const messageId = uuidv4();
             room.addMessage({ userName, message, id: messageId });
             notifyAll(wsServer, { ...data, id: messageId });
