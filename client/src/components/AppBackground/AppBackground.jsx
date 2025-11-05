@@ -11,17 +11,14 @@ const STATE_MACHINE_NAME = 'Start';
 export default function AppBackground() {
     const dispatch = useDispatch();
     const theme = useSelector(getTheme);
-
     const { rive, RiveComponent } = useRive({
         src: natureRiv,
         stateMachines: STATE_MACHINE_NAME,
         layout: new Layout({
             fit: Fit.Layout // TODO: check this
         }),
-        autoplay: true,
-        automaticallyHandleEvents: true
+        autoplay: true
     });
-
     const riveInput = useStateMachineInput(rive, STATE_MACHINE_NAME, 'on/off');
 
     useEffect(() => {
