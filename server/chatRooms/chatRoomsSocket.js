@@ -1,5 +1,6 @@
-import ChatRoomsManager from './chatRoomsManager.js';
 import { WebSocketServer } from 'ws';
+import { v4 as uuidv4 } from 'uuid';
+import ChatRoomsManager from './chatRoomsManager.js';
 import { MESSAGE_MAX_LENGTH } from '../constants/chatRooms.js';
 
 const initListeners = (wsServer, ws) => {
@@ -22,8 +23,9 @@ const initListeners = (wsServer, ws) => {
             }
 
             // TODO: check emojis
-            room.addMessage({ userName, message });
-            notifyAll(wsServer, data);
+            const messageId = uuidv4();
+            room.addMessage({ userName, message, id: messageId });
+            notifyAll(wsServer, { ...data, id: messageId });
         } catch (error) {
             console.error(error);
         }
