@@ -24,8 +24,6 @@ export default function ThemeToggle({ className }) {
     [styles.circleEndPosition]: theme === 'dark'
   });
 
-  // TODO: add spring animations
-
   return (
     <div className={toggleClasses} onClick={handleToggleClick}>
       {theme === 'dark' && <Moon />}
