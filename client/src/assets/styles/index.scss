@@ -1,2 +1,12 @@
 @use './reset';
 
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+// TODO: check styles
+#root {
+  padding-top: 120px;
+  position: relative;
+  z-index: 1;
+}

@@ -8,21 +8,15 @@ h2,
 h3,
 h4,
 p,
-figure,
-blockquote,
-dl,
-dd {
+ul {
   margin: 0;
 }
 
-ul[role="list"],
-ol[role="list"] {
+ul {
   list-style: none;
 }
 
 input,
-button,
-textarea,
-select {
+button {
   font: inherit;
 }
