@@ -8,4 +8,5 @@
 
 # misc
 server/.env
+client/.env
 .idea
