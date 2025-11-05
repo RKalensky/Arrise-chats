@@ -6,26 +6,26 @@ const initListeners = (wsServer, ws) => {
     ws.on('message', (rawData) => {
         try {
             const data = JSON.parse(rawData);
-            const { roomId, userId, userName, message } = data;
+            const { roomId, userName, message } = data;
             const room = ChatRoomsManager.getChatRoom(roomId);
 
-            if (!roomId || !userId || !userName || !message) {
-                return ws.send(JSON.stringify({ error: 'Bad message structure. Fields roomId, userId, userName, message are required' }));
+            if (!roomId || !userName || !message) {
+                return;
             }
 
-            // TODO: check emojis
             if (message.length > MESSAGE_MAX_LENGTH) {
-                return ws.send(JSON.stringify({ error: `Message length is exceeded ${MESSAGE_MAX_LENGTH} characters` }));
+                return;
             }
 
             if (!room) {
-                return ws.send(JSON.stringify({ error: 'Room not found' }));
+                return;
             }
 
-            room.addMessage({ userId, userName, message });
+            // TODO: check emojis
+            room.addMessage({ userName, message });
             notifyAll(wsServer, data);
         } catch (error) {
-            ws.send(JSON.stringify({ error: error.message }))
+            console.error(error);
         }
     });
 }

@@ -9,7 +9,7 @@ export async function fetchData(path, options = {}) {
       throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
     }
 
-    return await response.json();
+    return response.json();
   } catch (error) {
     console.error('Fetch error:', error);
     throw error;

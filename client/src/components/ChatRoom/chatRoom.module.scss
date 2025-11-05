@@ -1,0 +1,23 @@
+.chatRoom {
+  position: relative;
+  height: 100%;
+}
+
+.chatPanel {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 100%;
+  max-width: 800px;
+  transform: translateX(-50%);
+  border-top: 1px solid black;
+}
+
+.messages {
+  overflow: auto;
+  height: 80%;
+}
+
+.message:not(:last-of-type) {
+  margin-bottom: 16px;
+}

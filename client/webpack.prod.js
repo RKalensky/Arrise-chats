@@ -43,15 +43,9 @@ module.exports = {
         type: 'asset/resource'
       },
       {
-        test: /\.(mp4|webm|mp3|wav|riv)$/i,
+        test: /\.(riv)$/i,
         type: 'asset/resource',
         generator: { filename: 'media/[hash][ext][query]' }
-      },
-      {
-        test: /\.(png|jpe?g|gif|svg)$/i,
-        type: 'asset',
-        parser: { dataUrlCondition: { maxSize: 10 * 1024 } },
-        generator: { filename: 'images/[hash][ext][query]' }
       }
     ]
   },
@@ -69,6 +63,9 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.API_BASE_URL': JSON.stringify(
         process.env.API_BASE_URL || 'http://localhost:4000'
+      ),
+      'process.env.SOCKETS_BASE_URL': JSON.stringify(
+        process.env.SOCKETS_BASE_URL || 'ws://localhost:4000'
       )
     })
   ]

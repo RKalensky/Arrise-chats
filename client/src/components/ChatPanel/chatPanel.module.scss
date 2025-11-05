@@ -1,0 +1,14 @@
+.chatPanel {
+  display: grid;
+  grid-template-columns: 1fr 2fr 100px;
+  width: 100%;
+  height: 48px;
+
+  div {
+    flex-grow: 1;
+
+    &:not(:last-of-type) {
+      border-right: 1px solid black;
+    }
+  }
+}

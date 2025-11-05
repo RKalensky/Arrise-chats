@@ -7,8 +7,8 @@ export default class ChatRoom {
         this.messages = [];
     }
 
-    addMessage({ userId, userName, message }) {
-        this.messages.push({ userId, userName, message });
+    addMessage({ userName, message }) {
+        this.messages.push({ userName, message });
     }
 
     getLatestMessages() {

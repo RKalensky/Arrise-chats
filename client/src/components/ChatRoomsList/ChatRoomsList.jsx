@@ -1,37 +1,44 @@
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
 
-import { fetchChatRoomsStart } from '../../store/actions/chatRoomsList';
+import { selectChatRoom } from '../../store/actions/chatRoomsList';
 import { getChatRooms } from '../../store/selectors/chatRoomsList';
 
-import * as styles from './ChatRoomsList.module.scss';
+import * as styles from './chatRoomsList.module.scss';
+import Loader from '../Loader/Loader';
 
-export default function ThemeToggle() {
+export default function ChatRoomsList() {
   const { rooms, isFetching, errorMessage } = useSelector(getChatRooms);
   const dispatch = useDispatch();
 
-  console.log('rooms', rooms, isFetching, errorMessage);
+  const selectChatRoomHandler = ({ id, name }) => {
+    console.log('selectChatRoomHandler', id);
+    dispatch(selectChatRoom({ id, name }));
+  };
 
-  useEffect(() => {
-    dispatch(fetchChatRoomsStart());
-  }, []);
+  if (errorMessage) {
+    return <div className={styles.chatRoomsListWrapper}>{errorMessage}</div>;
+  }
 
-  const fetchingTemplate = <p>Loading...</p>;
-  const list = (
-    <ul className={styles.chatRoomsList}>
+  const listTemplate = (
+    <ul>
       {rooms.map(({ id, name }) => (
-        <li key={id} className={styles.list}>
-          <NavLink to={`chat-room/${id}`}>{name}</NavLink>
+        <li
+          key={id}
+          className={styles.roomListItem}
+          onClick={() => {
+            selectChatRoomHandler({ id, name });
+          }}
+        >
+          {name}
         </li>
       ))}
     </ul>
   );
 
   return (
-    <>
+    <div className={styles.chatRoomsListWrapper}>
       <h1 className={styles.header}>Chat rooms list</h1>
-      {isFetching ? fetchingTemplate : list}
-    </>
+      {isFetching ? <Loader /> : listTemplate}
+    </div>
   );
 }
