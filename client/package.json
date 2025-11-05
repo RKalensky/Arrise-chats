@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
-    "lint": "eslint src/**/*.{js,jsx}"
+    "lint": "eslint .",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@rive-app/react-canvas": "^4.23.4",
