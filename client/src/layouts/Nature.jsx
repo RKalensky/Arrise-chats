@@ -6,7 +6,7 @@ import { getTheme } from '../store/selectors/ui';
 import { setTheme } from '../store/actions/ui';
 
 import * as styles from './nature.module.scss';
-import ThemeToggle from '../components/ThemeToggle/ThemeToggle';
+import ThemeToggle from '../components/ui/ThemeToggle/ThemeToggle';
 
 const STATE_MACHINE_NAME = 'Start';
 

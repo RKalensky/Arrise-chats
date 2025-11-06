@@ -4,7 +4,7 @@ import { selectChatRoom } from '../../store/actions/chatRoomsList';
 import { getChatRooms } from '../../store/selectors/chatRoomsList';
 
 import * as styles from './chatRoomsList.module.scss';
-import Loader from '../Loader/Loader';
+import Loader from '../ui/Loader/Loader';
 
 export default function ChatRoomsList() {
   const { rooms, isFetching, errorMessage } = useSelector(getChatRooms);

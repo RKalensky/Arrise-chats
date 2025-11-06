@@ -1,5 +1,5 @@
-import Input from '../controls/Input/Input';
-import Button from '../controls/Button/Button';
+import Input from '../ui/Input/Input';
+import Button from '../ui/Button/Button';
 
 import { chatPanel } from './chatPanel.module.scss';
 import { useState } from 'react';

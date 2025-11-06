@@ -1,11 +1,11 @@
-import Moon from '../../assets/moon';
-import Sun from '../../assets/sun';
+import Moon from '../../../assets/moon';
+import Sun from '../../../assets/sun';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTheme } from '../../store/selectors/ui';
-import { toggleTheme } from '../../store/actions/ui';
+import { getTheme } from '../../../store/selectors/ui';
+import { toggleTheme } from '../../../store/actions/ui';
 
-import * as styles from './ThemeToggle.module.scss';
+import * as styles from './themeToggle.module.scss';
 
 export default function ThemeToggle({ className }) {
   const theme = useSelector(getTheme);

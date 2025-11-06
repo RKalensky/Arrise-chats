@@ -3,7 +3,7 @@ import { getChatRoomMessages } from '../../store/selectors/chatRoomMessages';
 
 import ChatMessage from '../ChatMessage/ChatMessage';
 import ChatPanel from '../ChatPanel/ChatPanel';
-import Loader from '../Loader/Loader';
+import Loader from '../ui/Loader/Loader';
 
 import * as styles from './chatRoom.module.scss';
 import { useEffect, useRef } from 'react';

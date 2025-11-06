@@ -3,7 +3,7 @@ import ChatRoomsList from './components/ChatRoomsList/ChatRoomsList';
 import ChatRoom from './components/ChatRoom/ChatRoom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSelectedChatRoom } from './store/selectors/chatRoomsList';
-import Modal from './components/Modal/Modal';
+import Modal from './components/ui/Modal/Modal';
 import { selectChatRoom } from './store/actions/chatRoomsList';
 
 export default function App() {
