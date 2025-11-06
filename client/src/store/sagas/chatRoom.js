@@ -11,7 +11,7 @@ import {
   RECONNECT,
   SEND_CHATROOM_MESSAGE,
   setChatRoomClosedStatus
-} from '../actions/chatRoomMessages';
+} from '../actions/chatRoom';
 import createWebsocketChannel from './events/wsEventsChannel';
 
 function* fetchChatRoomMessages(room, controller) {
@@ -85,7 +85,7 @@ function* reconnectWorker(chatTask) {
   }
 }
 
-export default function* chatRoomMessages() {
+export default function* chatRoom() {
   // In case of slow internet or fast actions, we abort the previous request to handle race conditions.
   let abortController = null;
   let chatTask = null;

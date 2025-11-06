@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import ui from './ui';
 import chatRooms from './chatRooms';
-import chatRoomMessages from './chatRoomMessages';
+import chatRoom from './chatRoom';
 
-export default combineReducers({ ui, chatRooms, chatRoomMessages });
+export default combineReducers({ ui, chatRooms, chatRoom });

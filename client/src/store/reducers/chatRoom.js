@@ -5,7 +5,7 @@ import {
   FETCH_CHATROOM_MESSAGES_START,
   FETCH_CHATROOM_MESSAGES_SUCCESS,
   SET_CLOSED_STATUS
-} from '../actions/chatRoomMessages';
+} from '../actions/chatRoom';
 
 const INITIAL_STATE = {
   messages: [],

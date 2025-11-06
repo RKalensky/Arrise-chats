@@ -5,7 +5,7 @@ import { chatPanel } from './chatPanel.module.scss';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { validateMessage, validateName } from '../../utils/validateInputs';
-import { sendChatRoomMessage } from '../../store/actions/chatRoomMessages';
+import { sendChatRoomMessage } from '../../store/actions/chatRoom';
 import { getSelectedChatRoom } from '../../store/selectors/chatRooms';
 
 export default function ChatPanel() {
