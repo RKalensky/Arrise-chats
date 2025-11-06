@@ -1,0 +1,29 @@
+@use './reset';
+
+:root {
+  --white-color: #FFFFFF;
+  --black-color: #000000;
+  --gray-color: #9D9D9D;
+  --yellow-color: #EDDD53;
+  --midnight-blue: #2C3E50;
+  --blue-color: #3373B8;
+  --blue-dark-color: #01244B;
+  --purple-color: #9519A6;
+  --red-color: #DA0D0D;
+
+  --text-color: var(--midnight-blue);
+  --header-color: var(--blue-dark-color);
+  --error-color: #var (--red-color);
+  --bacground-color: rgba(255, 255, 255, 0.7);
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --border-color: rgba(0, 0, 0, 0.5);
+  --text-hover-bacground: rgba(1, 36, 75, 0.7);
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+input::placeholder {
+  color: var(--gray-color);
+}

@@ -1,0 +1,30 @@
+.chatRoomsListWrapper {
+  position: relative;
+  margin: 100px auto 0;
+  padding: 24px;
+  background-color: var(--bacground-color);
+  max-width: 500px;
+  min-height: 300px;
+  box-shadow: 0 4px 20px 0 var(--shadow-color);
+}
+
+.header {
+  margin-bottom: 30px;
+  font-size: 40px;
+  color: var(--header-color);
+}
+
+.roomListItem {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--blue-dark-color);
+  transition: all 0.2s linear;
+
+  &:hover {
+    background-color: var(--text-hover-bacground);
+    color: var(--white-color);
+  }
+}
+

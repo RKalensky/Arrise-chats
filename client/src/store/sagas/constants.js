@@ -1,0 +1,4 @@
+export const EVENTS = {
+  WS_ADD_MESSAGE: 'WS_ADD_MESSAGE',
+  WS_CLOSED: 'WS_CLOSED'
+};

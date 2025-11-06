@@ -1,0 +1,42 @@
+$toggleWidth: 106px;
+$toggleHeight: 50px;
+$horizontalPadding: 4px;
+
+:where(.toggle) {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: $toggleWidth;
+  height: $toggleHeight;
+  padding: 0 $horizontalPadding;
+  border-radius: calc(#{$toggleWidth} / 2);
+  box-shadow: 2px 2px 10px 2px var(--blue-color);
+  transition: opacity 3s linear;
+  cursor: pointer;
+  user-select: none;
+
+  &.light {
+    justify-content: flex-end;
+    padding-right: 6px;
+    background: linear-gradient(135deg, var(--blue-color) 0%, var(--yellow-color) 100%);
+  }
+
+  &.dark {
+    padding-left: 6px;
+    background: linear-gradient(135deg, var(--blue-color) 0%, var(--purple-color) 100%);
+  }
+}
+
+.circle {
+  position: absolute;
+  left: $horizontalPadding;
+  width: calc(#{$toggleHeight} - $horizontalPadding * 2);
+  height: calc(#{$toggleHeight} - $horizontalPadding * 2);
+  border-radius: 50%;
+  background: var(--white-color);
+  transition: transform 0.1s linear;
+
+  &.circleEndPosition {
+    transform: translateX(calc(#{$toggleWidth} - #{$toggleHeight}));
+  }
+}

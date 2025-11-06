@@ -1,0 +1,1 @@
+export const getTheme = ({ ui }) => ui.theme;
