@@ -77,8 +77,6 @@ function* chatRoomMessagesWorker() {
   const channel = yield call(createWebsocketChannel, socket);
   window.chatS = socket;
 
-  console.log('chatRoomMessagesWorker');
-
   yield fork(wsSubscribeWorker, channel);
   yield fork(wsNotifyWorker, socket);
 }

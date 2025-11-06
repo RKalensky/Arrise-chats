@@ -11,7 +11,7 @@ export default function ChatMessage({ userName, message, isFromSocket }) {
   const withEmoji = emojiRegex().test(message);
   const [isEmojiShown, setIsEmojiShown] = useState(withEmoji);
 
-  const springProps = useSpring({
+  const springConfettiProps = useSpring({
     config: {
       duration: CONFETTI_PRESENCE_INTERVAL
     },
@@ -19,7 +19,10 @@ export default function ChatMessage({ userName, message, isFromSocket }) {
     to: { opacity: 0 }
   });
 
-  console.log('isFromSocket', isFromSocket);
+  const springNewMessageProps = useSpring({
+    from: { opacity: 0, transform: 'translateX(30px)' },
+    to: { opacity: 1, transform: 'translateX(0)' }
+  });
 
   useEffect(() => {
     if (!withEmoji) {
@@ -35,19 +38,20 @@ export default function ChatMessage({ userName, message, isFromSocket }) {
     }, CONFETTI_PRESENCE_INTERVAL);
   }, []);
 
-  console.log('isEmojiShown', isEmojiShown);
-
   return (
-    <div className={styles.messageWrapper}>
+    <animated.div
+      className={styles.messageWrapper}
+      style={isFromSocket ? springNewMessageProps : {}}
+    >
       <h2 className={styles.userName}>{userName}</h2>
       <p className={styles.message}>{message}</p>
       {isEmojiShown && (
-        <animated.div className={styles.confetti} style={springProps}>
+        <animated.div className={styles.confetti} style={springConfettiProps}>
           <div className={styles.confetti}>
             <Confetti mode="fall" particleCount={40} />
           </div>
         </animated.div>
       )}
-    </div>
+    </animated.div>
   );
 }

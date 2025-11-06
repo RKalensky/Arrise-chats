@@ -10,12 +10,19 @@
   width: 100%;
   max-width: 800px;
   transform: translateX(-50%);
-  border: 1px solid black;
+  border: 1px solid var(--blue-dark-color);
 }
 
 .messages {
   overflow: auto;
   height: 80%;
+}
+
+.noMessages {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--text-color);
+  opacity: 0.7;
 }
 
 .message:not(:last-of-type) {

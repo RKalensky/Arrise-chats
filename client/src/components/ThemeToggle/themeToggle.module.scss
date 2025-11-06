@@ -33,7 +33,7 @@ $horizontalPadding: 4px;
   width: calc(#{$toggleHeight} - $horizontalPadding * 2);
   height: calc(#{$toggleHeight} - $horizontalPadding * 2);
   border-radius: 50%;
-  background: white;
+  background: var(--white-color);
   transition: transform 0.1s linear;
 
   &.circleEndPosition {

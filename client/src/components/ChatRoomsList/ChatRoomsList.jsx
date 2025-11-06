@@ -11,7 +11,6 @@ export default function ChatRoomsList() {
   const dispatch = useDispatch();
 
   const selectChatRoomHandler = ({ id, name }) => {
-    console.log('selectChatRoomHandler', id);
     dispatch(selectChatRoom({ id, name }));
   };
 

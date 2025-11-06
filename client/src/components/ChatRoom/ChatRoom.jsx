@@ -23,7 +23,7 @@ export default function ChatRoom() {
   }
 
   const messagesTemplate = !messages.length ? (
-    <p>No messages yet</p>
+    <p className={styles.noMessages}>No messages yet</p>
   ) : (
     <ul className={styles.messages} ref={list}>
       {messages.map(({ userName, message, isFromSocket }, index) => {
