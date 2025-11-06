@@ -8,6 +8,7 @@ import Loader from '../ui/Loader/Loader';
 import * as styles from './chatRoom.module.scss';
 import { useEffect, useRef } from 'react';
 import { RECONNECT } from '../../store/actions/chatRoomMessages';
+import Button from '../ui/Button/Button';
 
 export default function ChatRoom() {
   const list = useRef(null);
@@ -52,7 +53,14 @@ export default function ChatRoom() {
   return (
     <div className={styles.chatRoom}>
       {isFetching ? <Loader /> : messagesTemplate}
-      {isConnectionClosed && <div onClick={reconnectHandler}>RECONNECT</div>}
+      {isConnectionClosed && (
+        <div className={styles.reconnectWrapper}>
+          <div className={styles.reconnectContent}>
+            <h2>Connection is lost</h2>
+            <Button onClick={reconnectHandler}>Reconnect</Button>
+          </div>
+        </div>
+      )}
       <div className={styles.chatPanel}>
         <ChatPanel />
       </div>
