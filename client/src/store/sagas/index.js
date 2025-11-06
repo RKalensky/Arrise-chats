@@ -1,7 +1,8 @@
-import { all, fork } from 'redux-saga/effects';
-import chatRoomsListSaga from './chatRoomsList';
+import { fork } from 'redux-saga/effects';
+import chatRoomsSaga from './chatRooms';
 import chatRoomMessages from './chatRoomMessages';
 
-export default function* mySaga() {
-  yield all([fork(chatRoomsListSaga), fork(chatRoomMessages)]);
+export default function* rootSaga() {
+  yield fork(chatRoomsSaga);
+  yield fork(chatRoomMessages);
 }

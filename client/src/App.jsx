@@ -2,9 +2,9 @@ import Nature from './layouts/Nature';
 import ChatRoomsList from './components/ChatRoomsList/ChatRoomsList';
 import ChatRoom from './components/ChatRoom/ChatRoom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSelectedChatRoom } from './store/selectors/chatRoomsList';
+import { getSelectedChatRoom } from './store/selectors/chatRooms';
 import Modal from './components/ui/Modal/Modal';
-import { selectChatRoom } from './store/actions/chatRoomsList';
+import { selectChatRoom } from './store/actions/chatRooms';
 
 export default function App() {
   const selectedChatRoom = useSelector(getSelectedChatRoom);

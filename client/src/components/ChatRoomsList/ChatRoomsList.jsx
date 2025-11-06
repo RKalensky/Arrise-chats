@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 
-import { selectChatRoom } from '../../store/actions/chatRoomsList';
-import { getChatRooms } from '../../store/selectors/chatRoomsList';
+import { selectChatRoom } from '../../store/actions/chatRooms';
+import { getChatRooms } from '../../store/selectors/chatRooms';
 
 import * as styles from './chatRoomsList.module.scss';
 import Loader from '../ui/Loader/Loader';

@@ -3,7 +3,7 @@ import {
   fetchChatRoomsError,
   fetchChatRoomsStart,
   fetchChatRoomsSuccess
-} from '../actions/chatRoomsList';
+} from '../actions/chatRooms';
 import { fetchData } from '../../services/fetchData';
 
 function* fetchChatRooms() {
@@ -15,7 +15,7 @@ function* fetchChatRooms() {
   }
 }
 
-export default function* chatRoomsListSaga() {
+export default function* chatRoomsSaga() {
   // init chat rooms fetch in saga
   yield put(fetchChatRoomsStart());
   yield call(fetchChatRooms);

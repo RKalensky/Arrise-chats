@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { validateMessage, validateName } from '../../utils/validateInputs';
 import { sendChatRoomMessage } from '../../store/actions/chatRoomMessages';
-import { getSelectedChatRoom } from '../../store/selectors/chatRoomsList';
+import { getSelectedChatRoom } from '../../store/selectors/chatRooms';
 
 export default function ChatPanel() {
   const [nickName, setNickName] = useState('');

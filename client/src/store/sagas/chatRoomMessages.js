@@ -1,10 +1,8 @@
-import { call, cancel, cancelled, fork, join, put, select, take } from 'redux-saga/effects';
-import { eventChannel } from 'redux-saga';
+import { call, cancel, cancelled, fork, join, put, take } from 'redux-saga/effects';
 
 import { EVENTS } from './constants';
 import { fetchData } from '../../services/fetchData';
-import { SELECT_ROOM } from '../actions/chatRoomsList';
-import { getSelectedChatRoom } from '../selectors/chatRoomsList';
+import { SELECT_ROOM } from '../actions/chatRooms';
 import {
   addChatRoomMessage,
   fetchChatRoomMessagesError,
@@ -12,6 +10,7 @@ import {
   fetchChatRoomMessagesSuccess,
   SEND_CHATROOM_MESSAGE
 } from '../actions/chatRoomMessages';
+import createWebsocketChannel from './actions/wsEventsChannel';
 
 function* fetchChatRoomMessages(room, controller) {
   try {
@@ -22,45 +21,24 @@ function* fetchChatRoomMessages(room, controller) {
   }
 }
 
-function createWebsocketChannel(socket) {
-  return eventChannel((emit) => {
-    socket.onopen = () => {
-      console.log('WebSocket open');
-      emit({ type: EVENTS.WS_CONNECTED });
-    };
-    socket.onerror = (error) => {
-      console.error('WebSocket error ' + error);
-    };
-    socket.onclose = () => {
-      emit({ type: EVENTS.WS_CLOSED });
-    };
-    socket.onmessage = (event) => {
-      try {
-        const payload = JSON.parse(event.data);
-        return emit({ type: EVENTS.WS_ADD_MESSAGE, payload });
-      } catch (error) {
-        console.error('WebSocket message error', error);
+function* wsSubscribeWorker(socketChannel) {
+  try {
+    while (true) {
+      const action = yield take(socketChannel);
+
+      switch (action.type) {
+        case EVENTS.WS_ADD_MESSAGE:
+          yield put(addChatRoomMessage({ ...action.payload, isFromSocket: true }));
+          break;
+
+        case EVENTS.WS_CLOSED:
+        case EVENTS.WS_ERROR:
+          // LOGIC
+          return;
       }
-    };
-
-    return () => {
-      console.log('UNS');
-      socket.close();
-    };
-  });
-}
-
-function* wsSubscribeWorker(channel) {
-  while (true) {
-    const action = yield take(channel);
-
-    if (action.type === EVENTS.WS_ADD_MESSAGE) {
-      yield put(addChatRoomMessage({ ...action.payload, isFromSocket: true }));
     }
-
-    if (action.type === EVENTS.WS_CLOSED) {
-      return EVENTS.WS_CLOSED;
-    }
+  } finally {
+    console.log('[wsSubscribeWorker] stopped');
   }
 }
 
@@ -71,7 +49,7 @@ function* wsNotifyWorker(socket) {
   }
 }
 
-function* chatRoomMessagesWorker() {
+function* chatRoomSocketsWorker() {
   let channel = null;
 
   try {
@@ -83,6 +61,8 @@ function* chatRoomMessagesWorker() {
 
     yield join(wsSubscriberTask);
     yield cancel(wsNotifyTask);
+  } catch (error) {
+    console.error(error);
   } finally {
     if (yield cancelled()) {
       channel?.close();
@@ -91,35 +71,21 @@ function* chatRoomMessagesWorker() {
 }
 
 export default function* chatRoomMessages() {
-  let chatTask = null;
-  let isReconnect = false;
-
   // In case of slow internet or fast actions, we abort the previous request to handle race conditions.
   let abortController = null;
+  let chatTask = null;
 
   while (true) {
-    yield take(SELECT_ROOM);
-    const room = yield select(getSelectedChatRoom);
+    const { payload: room } = yield take(SELECT_ROOM);
 
-    if (abortController) {
-      abortController.abort();
-    }
+    if (!room) continue;
+    if (abortController) abortController.abort();
+    if (chatTask) yield cancel(chatTask);
 
-    if (chatTask) {
-      yield cancel(chatTask);
-    }
+    abortController = new AbortController();
 
-    if (!room) {
-      continue;
-    }
-
-    if (!isReconnect) {
-      abortController = new AbortController();
-      yield put(fetchChatRoomMessagesStart());
-      yield fork(fetchChatRoomMessages, room.id, abortController);
-    }
-
-    chatTask = yield fork(chatRoomMessagesWorker, room);
-    isReconnect = false;
+    yield put(fetchChatRoomMessagesStart());
+    yield fork(fetchChatRoomMessages, room.id, abortController);
+    chatTask = yield fork(chatRoomSocketsWorker, room);
   }
 }

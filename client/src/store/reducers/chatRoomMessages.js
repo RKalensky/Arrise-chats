@@ -19,17 +19,21 @@ const chatRoomMessagesReducer = produce((draft, action) => {
       draft.fetchErrorMessage = '';
       draft.isFetching = true;
       break;
+
     case FETCH_CHATROOM_MESSAGES_SUCCESS:
       draft.isFetching = false;
       draft.messages = action.payload;
       break;
+
     case FETCH_CHATROOM_MESSAGES_ERROR:
       draft.isFetching = false;
       draft.fetchErrorMessage = action.payload;
       break;
+
     case ADD_CHATROOM_MESSAGE:
       draft.messages.push(action.payload);
       break;
+
     default:
       break;
   }
