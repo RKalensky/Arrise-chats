@@ -16,7 +16,11 @@ export default function ChatRoomsList() {
   };
 
   if (errorMessage) {
-    return <div className={styles.chatRoomsListWrapper}>{errorMessage}</div>;
+    return (
+      <div className={styles.chatRoomsListWrapper}>
+        <h1 className={styles.header}>{errorMessage}</h1>
+      </div>
+    );
   }
 
   const listTemplate = (
