@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getSelectedChatRoom } from './store/selectors/chatRooms';
 import Modal from './components/ui/Modal/Modal';
 import { selectChatRoom } from './store/actions/chatRooms';
+import { setChatRoomClosedStatus } from './store/actions/chatRoomMessages';
 
 export default function App() {
   const selectedChatRoom = useSelector(getSelectedChatRoom);
@@ -12,6 +13,7 @@ export default function App() {
 
   const resetRoomHandler = () => {
     dispatch(selectChatRoom(null));
+    dispatch(setChatRoomClosedStatus(false));
   };
 
   return (

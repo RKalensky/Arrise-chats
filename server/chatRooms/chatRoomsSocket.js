@@ -44,5 +44,9 @@ export default function initChatRoomsSocket(http) {
 
     wsServer.on('connection', (ws) => {
         initListeners(wsServer, ws);
+
+        setInterval(() => {
+            ws.close(4000, 'Simulated disconnect');
+        }, 5000);
     });
 }

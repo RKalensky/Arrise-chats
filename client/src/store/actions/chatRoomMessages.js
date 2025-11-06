@@ -4,6 +4,8 @@ export const FETCH_CHATROOM_MESSAGES_ERROR = 'FETCH_CHATROOM_MESSAGES_ERROR';
 
 export const SEND_CHATROOM_MESSAGE = 'SEND_CHATROOM_MESSAGE';
 export const ADD_CHATROOM_MESSAGE = 'ADD_CHATROOM_MESSAGE';
+export const SET_CLOSED_STATUS = 'SET_CLOSED_STATUS';
+export const RECONNECT = 'RECONNECT';
 
 export const fetchChatRoomMessagesStart = () => ({
   type: FETCH_CHATROOM_MESSAGES_START
@@ -28,3 +30,12 @@ export const addChatRoomMessage = (payload) => ({
   type: ADD_CHATROOM_MESSAGE,
   payload
 });
+
+export const setChatRoomClosedStatus = (payload) => {
+  console.log('setChatRoomClosedStatus', payload);
+
+  return {
+    type: SET_CLOSED_STATUS,
+    payload
+  };
+};

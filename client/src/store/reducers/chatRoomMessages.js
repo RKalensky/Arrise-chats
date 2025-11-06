@@ -3,13 +3,15 @@ import {
   ADD_CHATROOM_MESSAGE,
   FETCH_CHATROOM_MESSAGES_ERROR,
   FETCH_CHATROOM_MESSAGES_START,
-  FETCH_CHATROOM_MESSAGES_SUCCESS
+  FETCH_CHATROOM_MESSAGES_SUCCESS,
+  SET_CLOSED_STATUS
 } from '../actions/chatRoomMessages';
 
 const INITIAL_STATE = {
   messages: [],
   isFetching: false,
-  fetchErrorMessage: ''
+  fetchErrorMessage: '',
+  isConnectionClosed: false
 };
 
 const chatRoomMessagesReducer = produce((draft, action) => {
@@ -32,6 +34,10 @@ const chatRoomMessagesReducer = produce((draft, action) => {
 
     case ADD_CHATROOM_MESSAGE:
       draft.messages.push(action.payload);
+      break;
+
+    case SET_CLOSED_STATUS:
+      draft.isConnectionClosed = action.payload;
       break;
 
     default:

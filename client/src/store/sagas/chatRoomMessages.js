@@ -8,9 +8,11 @@ import {
   fetchChatRoomMessagesError,
   fetchChatRoomMessagesStart,
   fetchChatRoomMessagesSuccess,
-  SEND_CHATROOM_MESSAGE
+  RECONNECT,
+  SEND_CHATROOM_MESSAGE,
+  setChatRoomClosedStatus
 } from '../actions/chatRoomMessages';
-import createWebsocketChannel from './actions/wsEventsChannel';
+import createWebsocketChannel from './events/wsEventsChannel';
 
 function* fetchChatRoomMessages(room, controller) {
   try {
@@ -22,23 +24,18 @@ function* fetchChatRoomMessages(room, controller) {
 }
 
 function* wsSubscribeWorker(socketChannel) {
-  try {
-    while (true) {
-      const action = yield take(socketChannel);
+  while (true) {
+    const action = yield take(socketChannel);
 
-      switch (action.type) {
-        case EVENTS.WS_ADD_MESSAGE:
-          yield put(addChatRoomMessage({ ...action.payload, isFromSocket: true }));
-          break;
+    switch (action.type) {
+      case EVENTS.WS_ADD_MESSAGE:
+        yield put(addChatRoomMessage({ ...action.payload, isFromSocket: true }));
+        break;
 
-        case EVENTS.WS_CLOSED:
-        case EVENTS.WS_ERROR:
-          // LOGIC
-          return;
-      }
+      case EVENTS.WS_CLOSED:
+        yield put(setChatRoomClosedStatus(true));
+        return;
     }
-  } finally {
-    console.log('[wsSubscribeWorker] stopped');
   }
 }
 
@@ -51,22 +48,40 @@ function* wsNotifyWorker(socket) {
 
 function* chatRoomSocketsWorker() {
   let channel = null;
+  let wsSubscriberTask = null;
+  let wsNotifyTask = null;
+  let socket = null;
 
   try {
-    const socket = new WebSocket(process.env.SOCKETS_BASE_URL);
+    socket = new WebSocket(process.env.SOCKETS_BASE_URL);
     channel = yield call(createWebsocketChannel, socket);
 
-    const wsSubscriberTask = yield fork(wsSubscribeWorker, channel);
-    const wsNotifyTask = yield fork(wsNotifyWorker, socket);
+    wsSubscriberTask = yield fork(wsSubscribeWorker, channel);
+    wsNotifyTask = yield fork(wsNotifyWorker, socket);
 
-    yield join(wsSubscriberTask);
-    yield cancel(wsNotifyTask);
+    yield put(setChatRoomClosedStatus(false));
+    yield join([wsSubscriberTask, wsNotifyTask]);
   } catch (error) {
     console.error(error);
   } finally {
     if (yield cancelled()) {
       channel?.close();
+      yield cancel(wsSubscriberTask);
+      yield cancel(wsNotifyTask);
     }
+  }
+}
+
+function* reconnectWorker(chatTask) {
+  let prevTask = chatTask;
+
+  while (true) {
+    yield take(RECONNECT);
+    if (prevTask) {
+      yield cancel(prevTask);
+    }
+
+    prevTask = yield fork(chatRoomSocketsWorker);
   }
 }
 
@@ -74,18 +89,23 @@ export default function* chatRoomMessages() {
   // In case of slow internet or fast actions, we abort the previous request to handle race conditions.
   let abortController = null;
   let chatTask = null;
+  let reconnectWorkerTask = null;
 
   while (true) {
     const { payload: room } = yield take(SELECT_ROOM);
+    console.log('payload', room);
 
-    if (!room) continue;
-    if (abortController) abortController.abort();
     if (chatTask) yield cancel(chatTask);
+    if (reconnectWorkerTask) yield cancel(reconnectWorkerTask);
+
+    if (abortController) abortController.abort();
+    if (!room) continue;
 
     abortController = new AbortController();
 
     yield put(fetchChatRoomMessagesStart());
     yield fork(fetchChatRoomMessages, room.id, abortController);
-    chatTask = yield fork(chatRoomSocketsWorker, room);
+    reconnectWorkerTask = yield fork(reconnectWorker, chatTask);
+    chatTask = yield fork(chatRoomSocketsWorker);
   }
 }

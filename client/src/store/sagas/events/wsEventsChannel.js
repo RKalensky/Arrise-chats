@@ -1,4 +1,4 @@
-import { eventChannel } from 'redux-saga';
+import { END, eventChannel } from 'redux-saga';
 import { EVENTS } from '../constants';
 
 export default function createWebsocketChannel(socket) {
@@ -11,15 +11,16 @@ export default function createWebsocketChannel(socket) {
       console.error('WebSocket error ' + error);
     };
 
-    socket.onclose = (event) => {
+    socket.onclose = () => {
+      console.log('WebSocket closed');
       emit({ type: EVENTS.WS_CLOSED });
-      console.log('WebSocket closed!!!!!', event);
+      emit(END);
     };
 
     socket.onmessage = (event) => {
       try {
         const payload = JSON.parse(event.data);
-        return emit({ type: EVENTS.WS_ADD_MESSAGE, payload });
+        emit({ type: EVENTS.WS_ADD_MESSAGE, payload });
       } catch (error) {
         console.error('WebSocket message error', error);
       }
