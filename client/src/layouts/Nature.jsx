@@ -17,7 +17,7 @@ export default function Nature({ children }) {
     src: natureRiv,
     stateMachines: STATE_MACHINE_NAME,
     layout: new Layout({
-      fit: Fit.Layout // TODO: check this
+      fit: Fit.Fill
     }),
     autoplay: true
   });
