@@ -1,8 +1,10 @@
-import { call, cancelled, fork, put, select, take } from 'redux-saga/effects';
+import { call, cancel, cancelled, fork, join, put, select, take } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
+
+import { EVENTS } from './constants';
+import { fetchData } from '../../services/fetchData';
 import { SELECT_ROOM } from '../actions/chatRoomsList';
 import { getSelectedChatRoom } from '../selectors/chatRoomsList';
-import { fetchData } from '../../services/fetchData';
 import {
   addChatRoomMessage,
   fetchChatRoomMessagesError,
@@ -11,56 +13,53 @@ import {
   SEND_CHATROOM_MESSAGE
 } from '../actions/chatRoomMessages';
 
-const ADD_MESSAGE = 'ADD_MESSAGE';
-
-function* fetchChatRoomMessages(room) {
+function* fetchChatRoomMessages(room, controller) {
   try {
-    const data = yield call(fetchData, `/api/chat-rooms/${room}`);
+    const data = yield call(fetchData, `/api/chat-rooms/${room}`, { signal: controller.signal });
     yield put(fetchChatRoomMessagesSuccess(data.messages));
   } catch (error) {
     yield put(fetchChatRoomMessagesError(error.message));
   }
 }
 
-function createWebSocketConnection() {
-  return new WebSocket(process.env.SOCKETS_BASE_URL);
-}
-
 function createWebsocketChannel(socket) {
   return eventChannel((emit) => {
-    socket.onopen = () => {};
+    socket.onopen = () => {
+      console.log('WebSocket open');
+      emit({ type: EVENTS.WS_CONNECTED });
+    };
     socket.onerror = (error) => {
-      console.log('WebSocket error ' + error);
+      console.error('WebSocket error ' + error);
+    };
+    socket.onclose = () => {
+      emit({ type: EVENTS.WS_CLOSED });
     };
     socket.onmessage = (event) => {
       try {
         const payload = JSON.parse(event.data);
-        return emit({ type: 'ADD_MESSAGE', payload });
+        return emit({ type: EVENTS.WS_ADD_MESSAGE, payload });
       } catch (error) {
         console.error('WebSocket message error', error);
       }
     };
 
     return () => {
+      console.log('UNS');
       socket.close();
     };
   });
 }
 
 function* wsSubscribeWorker(channel) {
-  try {
-    while (true) {
-      const action = yield take(channel);
+  while (true) {
+    const action = yield take(channel);
 
-      switch (action.type) {
-        case ADD_MESSAGE: {
-          yield put(addChatRoomMessage({ ...action.payload, isFromSocket: true }));
-        }
-      }
+    if (action.type === EVENTS.WS_ADD_MESSAGE) {
+      yield put(addChatRoomMessage({ ...action.payload, isFromSocket: true }));
     }
-  } finally {
-    if (yield cancelled()) {
-      channel.close();
+
+    if (action.type === EVENTS.WS_CLOSED) {
+      return EVENTS.WS_CLOSED;
     }
   }
 }
@@ -73,32 +72,54 @@ function* wsNotifyWorker(socket) {
 }
 
 function* chatRoomMessagesWorker() {
-  const socket = yield call(createWebSocketConnection);
-  const channel = yield call(createWebsocketChannel, socket);
-  window.chatS = socket;
+  let channel = null;
 
-  yield fork(wsSubscribeWorker, channel);
-  yield fork(wsNotifyWorker, socket);
+  try {
+    const socket = new WebSocket(process.env.SOCKETS_BASE_URL);
+    channel = yield call(createWebsocketChannel, socket);
+
+    const wsSubscriberTask = yield fork(wsSubscribeWorker, channel);
+    const wsNotifyTask = yield fork(wsNotifyWorker, socket);
+
+    yield join(wsSubscriberTask);
+    yield cancel(wsNotifyTask);
+  } finally {
+    if (yield cancelled()) {
+      channel?.close();
+    }
+  }
 }
 
 export default function* chatRoomMessages() {
-  let task = null;
+  let chatTask = null;
+  let isReconnect = false;
+
+  // In case of slow internet or fast actions, we abort the previous request to handle race conditions.
+  let abortController = null;
 
   while (true) {
     yield take(SELECT_ROOM);
     const room = yield select(getSelectedChatRoom);
 
-    if (task) {
-      task.cancel();
+    if (abortController) {
+      abortController.abort();
+    }
+
+    if (chatTask) {
+      yield cancel(chatTask);
     }
 
     if (!room) {
       continue;
     }
 
-    yield put(fetchChatRoomMessagesStart());
-    yield call(fetchChatRoomMessages, room.id);
+    if (!isReconnect) {
+      abortController = new AbortController();
+      yield put(fetchChatRoomMessagesStart());
+      yield fork(fetchChatRoomMessages, room.id, abortController);
+    }
 
-    task = yield fork(chatRoomMessagesWorker, room);
+    chatTask = yield fork(chatRoomMessagesWorker, room);
+    isReconnect = false;
   }
 }

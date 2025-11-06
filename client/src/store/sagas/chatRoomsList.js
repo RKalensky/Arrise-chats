@@ -16,6 +16,7 @@ function* fetchChatRooms() {
 }
 
 export default function* chatRoomsListSaga() {
+  // init chat rooms fetch in saga
   yield put(fetchChatRoomsStart());
   yield call(fetchChatRooms);
 }
