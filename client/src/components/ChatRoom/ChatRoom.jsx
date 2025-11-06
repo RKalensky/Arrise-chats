@@ -48,8 +48,6 @@ export default function ChatRoom() {
     </ul>
   );
 
-  console.log('isConnectionClosed', isConnectionClosed);
-
   return (
     <div className={styles.chatRoom}>
       {isFetching ? <Loader /> : messagesTemplate}

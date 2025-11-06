@@ -31,11 +31,7 @@ export const addChatRoomMessage = (payload) => ({
   payload
 });
 
-export const setChatRoomClosedStatus = (payload) => {
-  console.log('setChatRoomClosedStatus', payload);
-
-  return {
-    type: SET_CLOSED_STATUS,
-    payload
-  };
-};
+export const setChatRoomClosedStatus = (payload) => ({
+  type: SET_CLOSED_STATUS,
+  payload
+});

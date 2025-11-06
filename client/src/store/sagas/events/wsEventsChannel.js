@@ -27,7 +27,6 @@ export default function createWebsocketChannel(socket) {
     };
 
     return () => {
-      console.log('UNS');
       socket.close();
     };
   });

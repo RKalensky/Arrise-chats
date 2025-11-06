@@ -93,7 +93,6 @@ export default function* chatRoomMessages() {
 
   while (true) {
     const { payload: room } = yield take(SELECT_ROOM);
-    console.log('payload', room);
 
     if (chatTask) yield cancel(chatTask);
     if (reconnectWorkerTask) yield cancel(reconnectWorkerTask);
