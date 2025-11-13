@@ -1,4 +1,4 @@
-import { call, cancel, cancelled, fork, join, put, take } from 'redux-saga/effects';
+import { call, cancel, cancelled, fork, join, put, select, take } from 'redux-saga/effects';
 
 import { EVENTS } from './constants';
 import { fetchData } from '../../services/fetchData';
@@ -13,6 +13,7 @@ import {
   setChatRoomClosedStatus
 } from '../actions/chatRoom';
 import createWebsocketChannel from './events/wsEventsChannel';
+import { getSelectedChatRoom } from '../selectors/chatRooms';
 
 function* fetchChatRoomMessages(room, controller) {
   try {
@@ -29,7 +30,10 @@ function* wsSubscribeWorker(socketChannel) {
 
     switch (action.type) {
       case EVENTS.WS_ADD_MESSAGE:
-        yield put(addChatRoomMessage({ ...action.payload, isFromSocket: true }));
+        const currentRoom = yield select(getSelectedChatRoom);
+        if (action.payload.roomId === currentRoom.id) {
+          yield put(addChatRoomMessage({ ...action.payload, isFromSocket: true }));
+        }
         break;
 
       case EVENTS.WS_CLOSED:
